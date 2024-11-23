@@ -1,0 +1,21 @@
+{% extends 'layout/base.html'%}
+
+
+{% block content%}
+<h1 class="text-center text-danger mt-1">Dang nhap</h1>
+<form method="post" action="/login">
+    <div class="form-floating mb-3 mt-3">
+        <input type="text" class="form-control" id="email" placeholder="Enter email" name="username">
+        <label for="email">Email</label>
+    </div>
+
+    <div class="form-floating mt-3 mb-3">
+        <input type="text" class="form-control" id="pwd" placeholder="Enter password" name="password">
+        <label for="pwd">Password</label>
+    </div>
+
+    <div class="form-floating mt-3 mb-3">
+        <button class="btn btn-danger">Dang nhap</button>
+    </div>
+</form>
+{%endblock%}
