@@ -32,6 +32,8 @@ def login_procee():
 
     return render_template('login.html')
 
+
+
 @login.user_loader
 def get_user(user_id):
     return dao.get_user_by_id(user_id)
@@ -41,5 +43,14 @@ def logout_procees():
     logout_user()
     return redirect('/login')
 
+
+
+@app.route("/createList")
+def create_list_procee():
+    return render_template('list.html')
+
+
+
+    return render_template('login.html')
 if __name__ == '__main__':
     app.run(debug=True)
