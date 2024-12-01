@@ -8,15 +8,15 @@ from flask_login import login_user, logout_user
 
 @app.route("/")
 def index():
-    cates = dao.load_categories()
-    cate_id = request.args.get('category_id')
-    page = request.args.get('page', 1)
-    prods = dao.load_products(cate_id = cate_id, page = (int)(page))
-    page_size = app.config.get('PAGE_SIZE',8)
-    total = dao.count_products()
+    # cates = dao.load_categories()
+    # cate_id = request.args.get('category_id')
+    # page = request.args.get('page', 1)
+    # prods = dao.load_products(cate_id = cate_id, page = (int)(page))
+    # page_size = app.config.get('PAGE_SIZE',8)
+    # total = dao.count_products()
 
-
-    return render_template('index.html', categories = cates, products = prods, page = math.ceil(total/page_size))
+    return render_template('index.html')
+   # return render_template('index.html', categories = cates, products = prods, page = math.ceil(total/page_size))
 
 @app.route("/login", methods=['get', 'post'])
 def login_procee():
@@ -47,7 +47,8 @@ def logout_procees():
 
 @app.route("/createList")
 def create_list_procee():
-    return render_template('list.html')
+    list_patient = dao.get_list_patient()
+    return render_template('list.html', list_patient = list_patient)
 
 
 

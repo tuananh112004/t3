@@ -45,140 +45,24 @@
                                 <th>
                                     <b>N</b>ame
                                 </th>
-                                <th>Ext.</th>
-                                <th>City</th>
-                                <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
-                                <th>Completion</th>
+                                <th>User</th>
+                                <th>Pass</th>
+                                <th></th>
+<!--                                <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>-->
+<!--                                <th>Completion</th>-->
                             </tr>
                             </thead>
                             <tbody>
+                            {% for i in list_patient %}
+                                <tr>
+                                    <td>{{ i.name}}</td>
+                                    <td>{{ i.username}}</td>
+                                    <td>{{ i.pass}}</td>
+                                    <td> <button class="btn btn-danger text-center align-content-center">-</button></td>
+                                </tr>
 
-                            <tr>
-                                <td>Blossom Dickerson</td>
-                                <td>5018</td>
-                                <td>Kempten</td>
-                                <td>2006/11/09</td>
-                                <td>17%</td>
-                            </tr>
-                            <tr>
-                                <td>Elliott Snyder</td>
-                                <td>3925</td>
-                                <td>Enines</td>
-                                <td>2006/03/08</td>
-                                <td>57%</td>
-                            </tr>
-                            <tr>
-                                <td>Castor Pugh</td>
-                                <td>9488</td>
-                                <td>Neath</td>
-                                <td>2014/23/12</td>
-                                <td>93%</td>
-                            </tr>
-                            <tr>
-                                <td>Pearl Carlson</td>
-                                <td>6231</td>
-                                <td>Cobourg</td>
-                                <td>2014/31/08</td>
-                                <td>100%</td>
-                            </tr>
-                            <tr>
-                                <td>Deirdre Bridges</td>
-                                <td>1579</td>
-                                <td>Eberswalde-Finow</td>
-                                <td>2014/26/08</td>
-                                <td>44%</td>
-                            </tr>
-                            <tr>
-                                <td>Daniel Baldwin</td>
-                                <td>6095</td>
-                                <td>Moircy</td>
-                                <td>2000/11/01</td>
-                                <td>33%</td>
-                            </tr>
-                            <tr>
-                                <td>Elliott Snyder</td>
-                                <td>3925</td>
-                                <td>Enines</td>
-                                <td>2006/03/08</td>
-                                <td>57%</td>
-                            </tr>
-                            <tr>
-                                <td>Castor Pugh</td>
-                                <td>9488</td>
-                                <td>Neath</td>
-                                <td>2014/23/12</td>
-                                <td>93%</td>
-                            </tr>
-                            <tr>
-                                <td>Elliott Snyder</td>
-                                <td>3925</td>
-                                <td>Enines</td>
-                                <td>2006/03/08</td>
-                                <td>57%</td>
-                            </tr>
-                            <tr>
-                                <td>Castor Pugh</td>
-                                <td>9488</td>
-                                <td>Neath</td>
-                                <td>2014/23/12</td>
-                                <td>93%</td>
-                            </tr>
-                            <tr>
-                                <td>Elliott Snyder</td>
-                                <td>3925</td>
-                                <td>Enines</td>
-                                <td>2006/03/08</td>
-                                <td>57%</td>
-                            </tr>
-                            <tr>
-                                <td>Castor Pugh</td>
-                                <td>9488</td>
-                                <td>Neath</td>
-                                <td>2014/23/12</td>
-                                <td>93%</td>
-                            </tr>
-                            <tr>
-                                <td>Elliott Snyder</td>
-                                <td>3925</td>
-                                <td>Enines</td>
-                                <td>2006/03/08</td>
-                                <td>57%</td>
-                            </tr>
-                            <tr>
-                                <td>Castor Pugh</td>
-                                <td>9488</td>
-                                <td>Neath</td>
-                                <td>2014/23/12</td>
-                                <td>93%</td>
-                            </tr>
-                            <tr>
-                                <td>Elliott Snyder</td>
-                                <td>3925</td>
-                                <td>Enines</td>
-                                <td>2006/03/08</td>
-                                <td>57%</td>
-                            </tr>
-                            <tr>
-                                <td>Castor Pugh</td>
-                                <td>9488</td>
-                                <td>Neath</td>
-                                <td>2014/23/12</td>
-                                <td>93%</td>
-                            </tr>
-                            <tr>
-                                <td>Elliott Snyder</td>
-                                <td>3925</td>
-                                <td>Enines</td>
-                                <td>2006/03/08</td>
-                                <td>57%</td>
-                            </tr>
-                            <tr>
-                                <td>Castor Pugh</td>
-                                <td>9488</td>
-                                <td>Neath</td>
-                                <td>2014/23/12</td>
-                                <td>93%</td>
-                            </tr>
+                            {% endfor %}
+
 
                             </tbody>
                         </table>
