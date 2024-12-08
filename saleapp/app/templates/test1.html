@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chỉnh sửa sản phẩm</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/admin/css/style.css">
+</head>
+<body>
+  <!-- Alert -->
+  <div id="alert-success" class="alert alert-success" style="display: none;">Thành công!</div>
+  <div id="alert-error" class="alert alert-danger" style="display: none;">Có lỗi xảy ra!</div>
+
+  <h1 class="mb-4">Chỉnh sửa sản phẩm</h1>
+
+  <form
+    action="/admin/products/edit/1?_method=PATCH"
+    method="POST"
+    enctype="multipart/form-data">
+
+    <!-- Tiêu đề -->
+    <div class="form-group">
+      <label for="title">Tiêu đề</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        required
+        value="Tên sản phẩm">
+    </div>
+
+    <!-- Danh mục -->
+    <div class="form-group">
+      <label for="product_category_id">Danh mục</label>
+      <select name="product_category_id" id="product_category_id" class="form-control">
+        <option value="">-- Chọn danh mục --</option>
+        <!-- Thay thế selectTree -->
+        <option value="1" selected>Danh mục 1</option>
+        <option value="2">Danh mục 2</option>
+      </select>
+    </div>
+
+    <!-- Nổi bật -->
+
+
+
+    <!-- Mô tả -->
+    <div class="form-group">
+      <label for="desc">Mô tả</label>
+      <textarea
+        class="form-control textarea-mce"
+        id="desc"
+        name="description"
+        rows="5">Mô tả sản phẩm</textarea>
+    </div>
+
+    <!-- Giá -->
+    <div class="form-group">
+      <label for="price">Giá</label>
+      <input
+        type="number"
+        class="form-control"
+        id="price"
+        name="price"
+        value="100000"
+        min="0">
+    </div>
+
+    <!-- % Giảm giá -->
+
+
+    <!-- Số lượng -->
+    <div class="form-group">
+      <label for="stock">Số lượng</label>
+      <input
+        type="number"
+        class="form-control"
+        id="stock"
+        name="stock"
+        value="50"
+        min="0">
+    </div>
+
+    <!-- Ảnh -->
+
+
+    <!-- Vị trí -->
+    <div class="form-group">
+      <label for="position">Vị trí</label>
+      <input
+        type="number"
+        class="form-control"
+        id="position"
+        name="position"
+        value="1"
+        min="1">
+    </div>
+
+
+
+    <!-- Nút Cập nhật -->
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </div>
+  </form>
+</body>
+</html>

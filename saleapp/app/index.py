@@ -53,5 +53,17 @@ def create_list_procee():
 
 
     return render_template('login.html')
+
+@app.route("/abc", methods=['get', 'post'])
+def medi():
+    if request.method.__eq__('POST'):
+        a = request.form.get('ids')
+        print(a)
+        return render_template('medicineb.html')
+    return render_template('medicineb.html')
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

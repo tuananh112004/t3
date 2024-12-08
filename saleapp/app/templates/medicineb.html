@@ -1,0 +1,168 @@
+{% extends 'layout/base.html'%}
+
+
+{% block content%}
+
+<body>
+
+<form
+        action="/abc?_method=PATCH"
+        method="POST"
+        enctype="multipart/form-data">
+
+    <!-- Tiêu đề -->
+    <div class="form-group d-none">
+        <label for="ids"></label>
+        <input
+                type="text"
+                class="form-control"
+                id="ids"
+                name="ids"
+
+                value="123">
+    </div>
+    <div class="form-group">
+        <label for="title">Tiêu đề</label>
+        <input
+                type="text"
+                class="form-control"
+                id="title"
+                name="title"
+                required
+                value="Tên sản phẩm">
+    </div>
+
+    <!-- Danh mục -->
+    <div class="form-group">
+        <label for="product_category_id">Danh mục</label>
+        <select name="product_category_id" id="product_category_id" class="form-control">
+            <option value="">-- Chọn danh mục --</option>
+            <!-- Thay thế selectTree -->
+            <option value="1" selected>Danh mục 1</option>
+            <option value="2">Danh mục 2</option>
+        </select>
+    </div>
+
+    <!-- Nổi bật -->
+
+
+    <!-- Mô tả -->
+    <div class="form-group">
+        <label for="desc">Mô tả</label>
+        <textarea
+                class="form-control textarea-mce"
+                id="desc"
+                name="description"
+                rows="5">Mô tả sản phẩm</textarea>
+    </div>
+
+    <!-- Giá -->
+    <div class="form-group">
+        <label for="price">Giá</label>
+        <input
+                type="number"
+                class="form-control"
+                id="price"
+                name="price"
+                value="100000"
+                min="0">
+    </div>
+
+    <!-- % Giảm giá -->
+
+
+    <!-- Số lượng -->
+    <div class="form-group">
+        <label for="stock">Số lượng</label>
+        <input
+                type="number"
+                class="form-control"
+                id="stock"
+                name="stock"
+                value="50"
+                min="0">
+    </div>
+
+    <!-- Ảnh -->
+
+
+    <!-- Vị trí -->
+    <!--    <div class="form-group">-->
+    <!--      <label for="position">Vị trí</label>-->
+    <!--      <input-->
+    <!--        type="number"-->
+    <!--        class="form-control"-->
+    <!--        id="position"-->
+    <!--        name="position"-->
+    <!--        value="1"-->
+    <!--        min="1">-->
+    <!--    </div>-->
+
+
+    <!-- Bộ lọc và tìm kiếm -->
+    <div class="card mb-3">
+
+        <div class="card mb-3">
+            <!--    <div class="card-header">Danh sách</div>-->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <!-- Thay thế mixin change-multi -->
+                        <!-- <button class="btn btn-warning">Thay đổi nhiều</button> -->
+                    </div>
+                    <div class="col-4">
+                        <a href="/admin/products/create" class="btn btn-outline-success">+ Thêm mới</a>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-hover table-sm" id="products-table">
+                <thead>
+                <tr>
+                    <!-- <th><input type="checkbox" name="checkall"></th> -->
+                    <th>STT</th>
+                    <th>Hình ảnh</th>
+                    <th>Tiêu đề</th>
+                    <th>Giá</th>
+                    <th>Vị trí</th>
+                    <!-- <th>Trạng thái</th> -->
+                    <!-- <th>Người tạo</th>
+                    <th>Hành động</th> -->
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Lặp qua danh sách sản phẩm -->
+                <!-- Ví dụ 1 sản phẩm -->
+                <tr>
+                    <!-- <td><input type="checkbox" name="id" value="1"></td> -->
+                    <td>1</td>
+                    <td><img src="/path/to/image.jpg" alt="Sản phẩm" width="100px" height="auto"></td>
+                    <td>Sản phẩm A</td>
+                    <td>100$</td>
+                    <td><input type="number" value="1" style="width: 60px;" min="1" name="position"></td>
+                    <!-- <td><button class="badge badge-success" data-status="active" data-id="1">Hoạt động</button></td> -->
+                    <!-- <td>
+                      <div>Nguyễn Văn A</div>
+                      <div>01/01/2024</div>
+                    </td> -->
+                    <td>
+                        <!-- <a href="/admin/products/detail/1" class="btn btn-secondary btn-sm">Chi tiết</a>
+                        <a href="/admin/products/edit/1" class="btn btn-warning btn-sm">Sửa</a> -->
+                        <button class="btn btn-danger btn-sm ml-1" data-id="1">Xóa</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </div>
+</form>
+<!-- Nút Cập nhật -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+{%endblock%}
