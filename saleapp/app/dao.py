@@ -1,5 +1,5 @@
 
-from app.models import  User, UserTest
+from app.models import  Patient, User
 import hashlib
 from app import app
 from flask_login  import logout_user
@@ -25,15 +25,15 @@ from flask import render_template, request, redirect
 #     return query.all()
 # def count_products():
 #     return Product.query.count()
-#
-#
-# def auth_user(username, password):
-#     password2 =  str(hashlib.md5('123'.encode('utf-8')).hexdigest())
-#     return User.query.filter(User.username.__eq__(username),
-#                              User.password.__eq__(password2)).first()
-# def get_user_by_id(id):
-#     return User.query.get(id)
+
+
+def auth_user(username, password):
+    password2 =  str(hashlib.md5('123'.encode('utf-8')).hexdigest())
+    return User.query.filter(User.username.__eq__(username),
+                             User.password.__eq__(password2)).first()
+def get_user_by_id(id):
+    return User.query.get(id)
 
 
 def get_list_patient():
-    return UserTest.query.all()
+    return Patient.query.all()
