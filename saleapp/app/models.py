@@ -179,11 +179,17 @@ class ExaminationList(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     examinationDate = Column(DATETIME)
     nurse_id = Column(Integer, ForeignKey(Nurse.id), nullable=False)
+
+class TimeFrame(db.Model):
+        id = Column(Integer, primary_key=True, autoincrement=True)
+        time = Column(String(50), nullable=True)
 class ExaminationSchedule(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
+    date_examination = Column(DATETIME,nullable=True)
     patient_id = Column(Integer, ForeignKey(Patient.id), nullable=False)
     examination_list_id = Column(Integer, ForeignKey(ExaminationList.id), nullable=False)
-    patient_id = Column(Integer, ForeignKey(Patient.id), nullable=False)
+    time_frame_id = Column(Integer, ForeignKey(TimeFrame.id), nullable=False)
+
 
 
 
@@ -193,11 +199,19 @@ if __name__ == '__main__':
         import hashlib
         # d = Doctor(name='Doc',sex="female",birthday="2000-01-02",address="ABC",username='docA', password = str(hashlib.md5('123'.encode('utf-8')).hexdigest()),avatar="123",specialist = 'ABC',yearOfExperience = 3,salary='aksj')
         # db.session.add(d)
+        #
         # u = Patient(name='A',sex="female",birthday="2000-01-02",address="ABC",username='patientA', password = str(hashlib.md5('123'.encode('utf-8')).hexdigest()),avatar="123",insuranced="123")
         # db.session.add(u)
-        a = Administrator(name='A', sex="female", birthday="2000-01-02", address="ABC", username='adminA',
-                    password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()), avatar="123", inauguration="2000-01-01",salary='Aks')
-        db.session.add(a)
+        # a = Administrator(name='A', sex="female", birthday="2000-01-02", address="ABC", username='adminA',
+        #             password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()), avatar="123", inauguration="2000-01-01",salary='Aks')
+        # db.session.add(a)
+        # d = Nurse(name='Doc', sex="female", birthday="2000-01-02", address="ABC", username='nurseA',
+        #            password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()), avatar="123",degree="CNTT" , salary='aksj')
+        # db.session.add(d)
+        # e = ExaminationList(examinationDate = '2024-12-19',nurse_id = 4)
+        # db.session.add(e)
+        k = ExaminationSchedule(date_examination='2024-12-19',patient_id = 2, examination_list_id = 1, time_frame_id = 1)
+        db.session.add(k)
         # donViA = MedicineUnit('vien')
         # thuocA = Medicine('thuoc','abc',12,22,)
 

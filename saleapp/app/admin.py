@@ -1,4 +1,4 @@
-from app.models import Doctor, Medicine, MedicineUnit, MedicineBill, Administrator
+from app.models import Doctor, Medicine, MedicineUnit, MedicineBill, Administrator, ExaminationSchedule, TimeFrame
 from flask_admin import Admin, BaseView, expose
 from app import app, db
 from flask_admin.contrib.sqla import ModelView
@@ -22,6 +22,7 @@ class DoctorView(AdminView):
     column_editable_list = ['name']
     can_export = True
 
+
 class MedicineView(AdminView):
     column_list = ['name','description']
 class MedicineUnitView(AdminView):
@@ -35,6 +36,8 @@ class LogoutView(BaseView):
     def is_accessible(self):
         return current_user.is_authenticated
 
+class TimeFrameView(AdminView):
+    column_list = ['id','time']
 
 # class Statsview(BaseView):
 #     @expose('/')
@@ -49,6 +52,7 @@ admin.add_view(MedicineUnitView(MedicineUnit,db.session))
 admin.add_view(MedicineView(Medicine,db.session))
 admin.add_view(DoctorView(Doctor,db.session))
 
-# admin.add_view(AdminView(User,db.session))
+
+admin.add_view(TimeFrameView(TimeFrame,db.session))
 # admin.add_view(Statsview(name="Thong ke"))
 admin.add_view(LogoutView(name="Logout"))
