@@ -27,17 +27,22 @@ class UserRole(RoleEnum):
     Nurse = 4
     Patient = 5
 
-class User(db.Model, UserMixin):
+class Account(db.Model,UserMixin):
+    __tablename__ = 'account'
+    id = db.Column(db.Integer, primary_key=True)
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(100), nullable=False)
+    account_role = Column(Enum(UserRole), default=UserRole.Patient)
+
+class User(db.Model):
     __tablename__ = "user"  # Bảng chung của lớp cha
     id = Column(Integer, primary_key = True, autoincrement = True)
     name = Column(String(50), nullable = True)
     sex = Column(String(50), nullable=True)
     birthday = Column(DATETIME, nullable=True)
     address = Column(String(150), nullable=True)
-    username = Column(String(50), nullable = False, unique = True)
-    password = Column(String(100), nullable = False)
     avatar = Column(String(150), default = "https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
-    user_role = Column(Enum(UserRole), default = UserRole.Patient)
+    account_id = Column(Integer, ForeignKey('account.id'), nullable=True)
     type = Column(String(50))  # Trường này dùng để phân biệt lớp con
     __mapper_args__ = {
         "polymorphic_identity": "user",  # Định danh cho lớp cha
@@ -45,14 +50,13 @@ class User(db.Model, UserMixin):
         "with_polymorphic": "*"  # Đảm bảo ánh xạ tất cả các lớp con
     }
 
-    def __init__(self,name,sex,birthday,address,username,password,avatar):
-        self.username = username
-        self.password = password
+    def __init__(self,name,sex=None,birthday=None,address=None,avatar=None,account_id=None):
         self.avatar = avatar
         self.address = address
         self.name = name
         self.sex = sex
         self.birthday = birthday
+        self.account_id = account_id
 
 
 
@@ -67,8 +71,8 @@ class Employee (User):
         "polymorphic_identity": "employee",  # Định danh cho lớp Employee
         # "polymorphic_on": type  # Trường để phân biệt các lớp con
     }
-    def __init__(self,name,sex,birthday,address,username,password,avatar,salary):
-        super().__init__(name,sex,birthday,address,username,password,avatar)
+    def __init__(self,name,sex,birthday,address,avatar,salary,account_id):
+        super().__init__(name,sex,birthday,address,avatar,account_id)
         self.salary = salary
 
 class Doctor(Employee):
@@ -79,8 +83,8 @@ class Doctor(Employee):
     __mapper_args__ = {
         "polymorphic_identity": "doctor",  # Định danh cho lớp Patient
     }
-    def __init__(self, name, sex, birthday, address, username, password, avatar, specialist, yearOfExperience, salary):
-        super().__init__(name, sex, birthday, address, username, password, avatar,salary)
+    def __init__(self, name, sex, birthday, address, avatar, specialist, yearOfExperience, salary,account_id):
+        super().__init__(name, sex, birthday, address, avatar,salary,account_id)
         self.specialist = specialist
         self.yearOfExperience = yearOfExperience
 
@@ -91,8 +95,8 @@ class Nurse(Employee):
     __mapper_args__ = {
         "polymorphic_identity": "nurse",  # Định danh cho lớp Patient
     }
-    def __init__(self, name, sex, birthday, address, username, password, avatar,degree, salary):
-        super().__init__(name, sex, birthday, address, username, password, avatar,salary)
+    def __init__(self, name, sex, birthday, address, avatar,degree, salary,account_id):
+        super().__init__(name, sex, birthday, address, avatar,salary,account_id)
         self.degree = degree
 
 
@@ -104,8 +108,8 @@ class Cashier(Employee):
         "polymorphic_identity": "cashier",  # Định danh cho lớp Patient
     }
 
-    def __init__(self, name, sex, birthday, address, username, password, avatar, skill, salary):
-        super().__init__(name, sex, birthday, address, username, password, avatar,salary)
+    def __init__(self, name, sex, birthday, address, avatar, skill, salary,account_id):
+        super().__init__(name, sex, birthday, address,avatar,salary,account_id)
         self.skill = skill
 
 class Administrator(Employee):
@@ -115,19 +119,19 @@ class Administrator(Employee):
     __mapper_args__ = {
         "polymorphic_identity": "administrator",  # Định danh cho lớp Patient
     }
-    def __init__(self, name, sex, birthday, address, username, password, avatar, inauguration, salary):
-        super().__init__(name, sex, birthday, address, username, password, avatar,salary)
+    def __init__(self, name, sex, birthday, address, avatar,account_id, inauguration, salary):
+        super().__init__(name, sex, birthday, address,avatar,salary,account_id)
         self.inauguration = inauguration
 
 class Patient (User):
     __tablename__ = "patient"  # Bảng chung của lớp cha
     id = Column(Integer, ForeignKey("user.id"), primary_key=True)
-    insuranced = Column(String(50))
+    insuranced = Column(String(50),nullable=True)
     __mapper_args__ = {
         "polymorphic_identity": "patient",  # Định danh cho lớp Patient
     }
-    def __init__(self, name, sex, birthday, address, username, password, avatar, insuranced):
-        super().__init__(name, sex, birthday, address, username, password, avatar)
+    def __init__(self, name, sex, birthday, address, avatar, insuranced=None):
+        super().__init__(name, sex, birthday, address,avatar)
         self.insuranced = insuranced
 
 
@@ -186,32 +190,40 @@ class TimeFrame(db.Model):
 class ExaminationSchedule(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     date_examination = Column(DATETIME,nullable=True)
+    note = Column(String(50), nullable=True)
     patient_id = Column(Integer, ForeignKey(Patient.id), nullable=False)
-    examination_list_id = Column(Integer, ForeignKey(ExaminationList.id), nullable=False)
+    examination_list_id = Column(Integer, ForeignKey(ExaminationList.id), nullable=True)
     time_frame_id = Column(Integer, ForeignKey(TimeFrame.id), nullable=False)
 
-
+    def __init__(self, date_examination, note, patient_id, examination_list_id, time_frame_id):
+        self.date_examination = date_examination
+        self.note = note
+        self.patient_id = patient_id
+        self.examination_list_id = examination_list_id
+        self.time_frame_id = time_frame_id
+        self.patient_id = patient_id
 
 
 if __name__ == '__main__':
     with app.app_context():
         # db.create_all()
         import hashlib
-        # d = Doctor(name='Doc',sex="female",birthday="2000-01-02",address="ABC",username='docA', password = str(hashlib.md5('123'.encode('utf-8')).hexdigest()),avatar="123",specialist = 'ABC',yearOfExperience = 3,salary='aksj')
+        # d = Doctor(name='Doc',sex="female",birthday="2000-01-02",address="ABC",avatar="123",specialist = 'ABC',yearOfExperience = 3,salary='aksj')
         # db.session.add(d)
         #
-        # u = Patient(name='A',sex="female",birthday="2000-01-02",address="ABC",username='patientA', password = str(hashlib.md5('123'.encode('utf-8')).hexdigest()),avatar="123",insuranced="123")
+        # u = Patient(name='A',sex="female",birthday="2000-01-02",address="ABC",avatar="123",insuranced="123")
         # db.session.add(u)
-        # a = Administrator(name='A', sex="female", birthday="2000-01-02", address="ABC", username='adminA',
-        #             password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()), avatar="123", inauguration="2000-01-01",salary='Aks')
+        # a = Administrator(name='A', sex="female", birthday="2000-01-02", address="ABC", account_id= 1,
+        #              avatar="123", inauguration="2000-01-01",salary='Aks')
         # db.session.add(a)
-        # d = Nurse(name='Doc', sex="female", birthday="2000-01-02", address="ABC", username='nurseA',
-        #            password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()), avatar="123",degree="CNTT" , salary='aksj')
+        # d = Nurse(name='Doc', sex="female", birthday="2000-01-02", address="ABC", avatar="123",degree="CNTT" , salary='aksj')
         # db.session.add(d)
         # e = ExaminationList(examinationDate = '2024-12-19',nurse_id = 4)
         # db.session.add(e)
-        k = ExaminationSchedule(date_examination='2024-12-19',patient_id = 2, examination_list_id = 1, time_frame_id = 1)
-        db.session.add(k)
+        # k = ExaminationSchedule(date_examination='2024-12-19',patient_id = 2, examination_list_id = 1, time_frame_id = 1)
+        # db.session.add(k)
+        aa = Account(username="admin", password="123",account_role=UserRole.Admin)
+        db.session.add(aa)
         # donViA = MedicineUnit('vien')
         # thuocA = Medicine('thuoc','abc',12,22,)
 

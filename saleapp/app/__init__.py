@@ -9,3 +9,4 @@ app.config["PAGE_SIZE"] = 3
 app.secret_key='dkfd'
 db = SQLAlchemy(app=app)
 login = LoginManager(app=app)
+

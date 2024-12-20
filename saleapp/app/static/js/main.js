@@ -183,3 +183,17 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
+
+document.getElementById('date_form').addEventListener('submit', function() {
+        var appointmentDate = document.getElementById('appointment_date').value;
+        console.log(appointmentDate)
+        localStorage.setItem('appointment_date', appointmentDate);
+});
+
+// Khi trang được tải lại, kiểm tra xem có giá trị đã lưu trong localStorage không
+window.addEventListener('load', function() {
+        var savedDate = localStorage.getItem('appointment_date');
+        if (savedDate) {
+            document.getElementById('appointment_date').value = savedDate;
+        }
+    });

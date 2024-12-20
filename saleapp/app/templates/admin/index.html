@@ -2,7 +2,7 @@
 
 {% block body %}
 {%if current_user.is_authenticated%}
-<h1>Welcome {{current_user.name}}</h1>
+<h1>Welcome {{current_user.username}}</h1>
 {%else%}
 <h1 class="text-center text-danger mt-1">Dang nhap Admin</h1>
 <form method="post" action="/login-admin">

@@ -1,4 +1,4 @@
-from app.models import Doctor, Medicine, MedicineUnit, MedicineBill, Administrator, ExaminationSchedule, TimeFrame
+from app.models import Doctor, Medicine, MedicineUnit, MedicineBill, Administrator, ExaminationSchedule, TimeFrame, UserRole
 from flask_admin import Admin, BaseView, expose
 from app import app, db
 from flask_admin.contrib.sqla import ModelView
@@ -9,7 +9,8 @@ from flask import redirect
 
 class AdminView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and isinstance(current_user, Administrator)
+
+        return current_user.is_authenticated and current_user.account_role.__eq__(UserRole.Admin)
 
 # if isinstance(doctor1, Doctor):
 #     print("doctor1 is an instance of Doctor")
