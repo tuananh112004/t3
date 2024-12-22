@@ -209,7 +209,7 @@ class ExaminationSchedule(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.create_all()
+        db.create_all()
         import hashlib
         # d = Doctor(name='Doc',sex="female",birthday="2000-01-02",address="ABC",avatar="123",specialist = 'ABC',yearOfExperience = 3,salary='aksj')
         # db.session.add(d)

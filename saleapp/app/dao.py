@@ -1,3 +1,5 @@
+from itertools import count
+
 from sqlalchemy import text, func
 from app.models import Patient, User, TimeFrame, ExaminationList, TimeFrame, ExaminationSchedule, Account, Nurse
 import hashlib
@@ -52,6 +54,12 @@ def delete_patient(patient_id):
     return db.session.delete(patient)
 
 
+def dateTrans(data):
+
+    if isinstance(data, datetime):
+        return data.strftime('%d-%m-%Y')
+
+    return data
 def get_list_patient2(appointment_date):
     # target_date = datetime(2024, 12, 19).date()  # Ngày bạn muốn tìm kiếm
 
@@ -65,16 +73,32 @@ def get_list_patient2(appointment_date):
                 .filter(func.date(ExaminationSchedule.date_examination).__eq__(appointment_date)).all()
 
 
+    dataJson = []
+    for data in dataTest:
 
-    print(dataTest)
+        tmp = dateTrans(data[3])
+
+        data_dict = {
+            "id": data[0],
+            "name": data[1],
+            "sex": data[2],
+            "date": tmp,  # Định dạng lại ngày
+            "address": data[4]
+        }
+        dataJson.append(data_dict)
+
+    session['dataJson'] = dataJson
+
+
     return dataTest
 
 
-def create_appointment(date_examination, note, name, birth, phone, time,address):
+def create_appointment(date_examination, note, name, birth, sex, time,address):
+    examination_schedules = db.session.query(ExaminationSchedule).filter(func.date(ExaminationSchedule.date_examination).__eq__(date_examination)).all()
     time_frame = TimeFrame.query.filter(TimeFrame.time == time).first()
     print(time_frame)
     time_frame_id = time_frame.id
-    patient = Patient(name,phone,birthday=birth, address=address, avatar=None)
+    patient = Patient(name,sex=sex,birthday=birth, address=address, avatar=None)
     db.session.add(patient)
     db.session.commit()
 

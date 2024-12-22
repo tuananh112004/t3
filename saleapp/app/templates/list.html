@@ -10,29 +10,25 @@
     <form id="date_form" method="POST" action="createList" class="mb-4">
         <div class="row">
             <div class="col-md-4">
-                {% if records %}
-                    <input type="date" name="appointment_date" value="{{ records[0]['examination_date']}}"
-                           class="form-control date_pick" id = "date_pick"required>
-                {%else%}
-                    <input type="date" name="appointment_date" class="form-control date_pick" required>
-                {%endif%}
+                <input id ="chonNgay" type="date" name="appointment_date" class="form-control date_pick" value="" required>
             </div>
             <div class="col-md-4">
-                <button type="submit" class="btn btn-primary">Xem Danh Sách</button>
+                <button type="submit" class="btn btn-primary" id="btnDate" onclick="addDate(this)">Xem Danh Sách</button>
             </div>
         </div>
     </form>
-
+    <h3 class="text-center" id="title-date">Danh Sách Khám Bệnh vào ngày: {{date}}</h3>
     {% if records %}
-        <h3 class="text-center">Danh Sách Khám Bệnh vào ngày: {{ records[0]['examination_date']}}</h3>
+
+
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>ID</th>
                 <th>Tên Bệnh Nhân</th>
                 <th>Giới tính</th>
-                <th>Ngày Khám</th>
-                <th>Giờ khám</th>
+                <th>Ngày sinh</th>
+                <th>Địa chỉ</th>>
                 <th></th>
             </tr>
             </thead>
@@ -47,6 +43,7 @@
                 {%else%}
                     <td>No information</td>
                 {%endif%}
+                <td>{{ record[4] }}</td>
     <!--            deleteCart({{ record.patient_id  }})-->
                 <td>
                 <button class="btn btn-danger"  onclick="deletePatient({{ record[0] }})">&times;</button>
@@ -61,16 +58,18 @@
 
 
     <!-- Nút để mở Modal -->
-    <div class="text-center">
-        <button type="button" class="btn btn-success" id="openModalBtn">Thêm Record</button>
-    </div>
     <div>
-        <a href="/export_excel" class="btn btn-primary">
-        <button type="button" class="btn-danger btn">Xuất Excel</button>
-    </a>
-        <div id="date_exel" data-value=""></div>
-
+        <div class="text-center">
+        <button type="button" class="btn btn-success" id="openModalBtn">Thêm Record</button>
+        </div>
+        <div class="w-100 txt ">
+            <a href="/export_excel" class="">
+            <button type="button" class="center-block btn-danger btn">Xuất Excel</button>
+            </a>
+            <div id="date_exel" data-value=""></div>
+        </div>
     </div>
+
 
 
     <!-- Modal -->
@@ -89,7 +88,7 @@
                                placeholder="Birth" required="">
                     </div>
                     <div class="col-md-4 form-group mt-3 mt-md-0">
-                        <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone"
+                        <input class="form-control" name="address" id="address" placeholder="Address"
                                required="">
                     </div>
                 </div>
@@ -99,11 +98,10 @@
                                placeholder="Appointment Date" required="">
                     </div>
                     <div class="col-md-4 form-group mt-3">
-                        <select name="department" id="department" class="form-select" required="">
-                            <option value="">Select Department</option>
-                            <option value="Department 1">Department 1</option>
-                            <option value="Department 2">Department 2</option>
-                            <option value="Department 3">Department 3</option>
+                        <select name="sex" id="sex" class="form-select" required="">
+                            <option value="">Select gender</option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
                         </select>
                     </div>
                     <div class="col-md-4 form-group mt-3">
@@ -181,9 +179,28 @@
         }
 
 
+        function addDate(e){
+            var title = document.getElementById("title-date")
+            if(title){
+                console.log(e)
+                var content = title.innerText
+                console.log(content)
+                title.innerText = content+e.target.value
+                console.log(title.innerText)
+            }
+
+        }
+
+
+
+
     </script>
     <style>
         /* Modal Background */
+        .txt{
+            text-align: center;
+            margin-top: 5px;
+        }
         .modal {
             display: none; /* Ẩn modal mặc định */
             position: fixed;
@@ -221,9 +238,12 @@
 
         .close:hover,
         .close:focus {
-            color: #000;
+            /*color: #000;*/
             text-decoration: none;
             cursor: pointer;
+        }
+        .nolor{
+            background-color: rgba(255, 0, 0, 0);
         }
 
         /* Tiêu đề Modal */
@@ -251,7 +271,6 @@
 
         /* Định dạng nút submit */
         .btn-primary {
-            background-color: #007bff;
             border: none;
             padding: 10px 20px;
             color: white;
@@ -261,7 +280,7 @@
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+
         }
 
         /* Hiệu ứng fadeIn cho modal */
@@ -319,7 +338,7 @@
 
         .close:hover,
         .close:focus {
-            color: #000;
+            /*color: #000;*/
             text-decoration: none;
         }
 
@@ -371,7 +390,7 @@
         }
 
         button:hover {
-            background-color: #0056b3;
+
         }
 
         /* Success and Error Message */

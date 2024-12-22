@@ -1,23 +1,42 @@
 import math
 
 from flask import render_template, request, redirect, jsonify, send_file, g, session
+from pyexpat.errors import messages
+
 import dao
 from app import app, login
 from flask_login import login_user, logout_user
-
+from datetime import datetime
 import pandas as pd
 from io import BytesIO
 @app.route("/", methods=['get', 'post'])
 def index():
+
     if request.method.__eq__('POST'):
+        appointment_date = request.form.get('appointment_date')
+
+        if (appointment_date):
+            pass
+        else:
+            appointment_date = '2024-12-12'
+        date_obj = datetime.strptime(appointment_date, '%Y-%m-%d')
+        formatted_date = date_obj.strftime('%d-%m-%Y')
+        count_schedule = dao.get_list_patient2(appointment_date)
+        if(len(count_schedule) >=40):
+            print(len(count_schedule))
+            return jsonify({
+                "status": 400,
+                "messages": "Ngày này đã kín lịch"
+                })
+        print(len(count_schedule))
         name = request.form.get('name')
-        phone = request.form.get('phone')
+        sex = request.form.get('sex')
         birth = request.form.get('birth')
         address = request.form.get('address')
         time = request.form.get('time')
         note = request.form.get('note')
         date = request.form.get('date')
-        a = dao.create_appointment(name = name, phone=phone, birth=birth, address=address, time = time, note = note,date_examination=date)
+        a = dao.create_appointment(name = name, sex=sex, birth=birth, address=address, time = time, note = note,date_examination=date)
         return redirect(request.referrer or '/')
     else:
         time_frames = dao.get_list_time_frame()
@@ -55,14 +74,22 @@ def logout_procees():
 
 @app.route("/createList", methods =['get','post'])
 def create_list_procee():
+    appointment_date = request.form.get('appointment_date')
+
+    if(appointment_date):
+        pass
+    else:
+        appointment_date = '2024-12-12'
+    date_obj = datetime.strptime(appointment_date, '%Y-%m-%d')
+    formatted_date = date_obj.strftime('%d-%m-%Y')
     if request.method.__eq__('POST'):
-        appointment_date = request.form.get('appointment_date')
+
 
         record = dao.get_list_patient2(appointment_date)
         print(record)
-        return render_template('list.html', records = record)
+        return render_template('list.html', records = record,date=formatted_date)
 
-    return render_template('list.html')
+    return render_template('list.html',date=formatted_date)
 
 @app.route("/abc", methods=['get', 'post'])
 def medi():
@@ -109,12 +136,16 @@ def timeframe_procee():
 
 @app.route("/export_excel")
 def export_excel_procee():
-    # data = [
-    #     {'examination_id': 5, 'patient_name': 'aa', 'patient_id': 5, 'time': '3:00', 'examination_date': '2024-12-20'},
-    #     {'examination_id': 5, 'patient_name': 'aa', 'patient_id': 5, 'time': '3:00', 'examination_date': '2024-12-20'}
-    # ]
-    data = session.get('result_data', None)
-    df = pd.DataFrame(data)
+    # [(2, 'aa', 'nam', datetime.datetime(2000, 2, 2, 0, 0), 'HCM'),
+    #  (3, 'aa', 'nam', datetime.datetime(2000, 2, 2, 0, 0), 'HCM'),
+    #  (4, 'aa', 'nam', datetime.datetime(2000, 2, 2, 0, 0), 'HCM'), (7, 'Nguyen Le Ngoc Anh', '0798536554', None, None)]
+    data = [
+        {'examination_id': 5, 'patient_name': 'aa', 'patient_id': 5, 'time': '3:00', 'examination_date': '2024-12-20'},
+        {'examination_id': 5, 'patient_name': 'aa', 'patient_id': 5, 'time': '3:00', 'examination_date': '2024-12-20'}
+    ]
+    data2 = session.get('dataJson', None)
+    print(data2)
+    df = pd.DataFrame(data2)
 
     # Sử dụng BytesIO để lưu tạm file Excel trong bộ nhớ (không ghi vào disk)
     output = BytesIO()
