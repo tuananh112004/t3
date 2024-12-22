@@ -225,12 +225,12 @@ if __name__ == '__main__':
         # db.session.add(e)
         # k = ExaminationSchedule(date_examination='2024-12-19',patient_id = 2, examination_list_id = 1, time_frame_id = 1)
         # db.session.add(k)
-        aa = Account(username="admin", password="123",account_role=UserRole.Admin)
-        db.session.add(aa)
+        # aa = Account(username="admin", password="123",account_role=UserRole.Admin)
+        # db.session.add(aa)
         # donViA = MedicineUnit('vien')
         # thuocA = Medicine('thuoc','abc',12,22,)
 
-        db.session.commit()
+        # db.session.commit()
 
         # c1 = Category(name='Mobile')
         # c2 = Category(name='Tablet')

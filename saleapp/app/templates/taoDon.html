@@ -20,6 +20,13 @@
                         <input type="text" class="form-control" id="hoTen" name ="name"placeholder="Nhập họ và tên">
                     </div>
                     <div class="mb-3">
+                            <label for="searchDrug" class="form-label">Bệnh nhân</label>
+                            <input type="text" class="form-control" id="SearchPatient" placeholder="Nhập tên bệnh nhân">
+                            <div id="searchResults1" class="list-group mt-2">
+                                <!-- Search results will be displayed here -->
+                            </div>
+                        </div>
+                    <div class="mb-3">
                         <label for="ngayKham" class="form-label">Ngày khám</label>
                         <input type="date" class="form-control" name ="ngayKham" id="ngayKham">
                     </div>
@@ -31,7 +38,7 @@
                         <label for="duDoanBenh" class="form-label">Dự đoán bệnh</label>
                         <textarea class="form-control" id="duDoanBenh" name ="duDoanBenh" rows="3" placeholder="Nhập dự đoán bệnh"></textarea>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 s">
                             <label class="form-label">druggg</label>
                             <input class="form-control" id="drugCollector" name="drugCollector">
                     </div>
@@ -103,7 +110,7 @@
                             <label for="drugUsage" class="form-label">Cách dùng</label>
                             <textarea class="form-control" id="drugUsage" rows="2" placeholder="Nhập cách dùng"></textarea>
                         </div>
-                        <button type="button" class="btn btn-primary" id="addDrugButton" onclick="addDrug()">Thêm vào danh sách</button>
+                        <button type="button" class="btn btn-primary display" id="addDrugButton"  onclick="addDrug()">Thêm vào danh sách</button>
                     </form>
                 </div>
             </div>
@@ -117,12 +124,14 @@
 
         searchDrugInput.addEventListener('input', function () {
             const query = searchDrugInput.value.trim();
+
             console.log(query)
             if (query.length > 0) {
                 // Fetch matching drugs from the server
                 fetch(`/api/search-drugs?q=${query}`)
                     .then(response => response.json())
                     .then(data => {
+                        availableDrugs = data;
                         searchResults.innerHTML = '';
 
                         data.forEach(drug => {
@@ -130,7 +139,6 @@
                             item.type = 'button';
                             item.className = 'list-group-item list-group-item-action';
                             item.textContent = drug.name;
-
                             item.addEventListener('click', () => {
                                 searchDrugInput.value = drug.name;
                                 searchResults.innerHTML = '';
@@ -153,13 +161,22 @@
     const modal = bootstrap.Modal.getInstance(document.getElementById('addDrugModal'));
     modal.hide();  // Close modal
     });
+
+
+
+
    function addDrug() {
-        console.log('ádasdasdasdas')
+
             const drugName = searchDrugInput.value;
             const drugUnit = document.getElementById('drugUnit').value;
             const drugQuantity = document.getElementById('drugQuantity').value;
             const drugUsage = document.getElementById('drugUsage').value;
+            const isValidDrug = availableDrugs.some(drug => drug.name === drugName);
 
+            if (!isValidDrug) {
+                alert('Vui lòng chọn một thuốc hợp lệ từ danh sách tìm kiếm.');
+                return; // Stop the function if no valid drug name is selected
+            }
             if (drugName && drugUnit && drugQuantity && drugUsage) {
                 const tableBody = document.querySelector('table tbody');
                 const newRow = document.createElement('tr');
@@ -204,13 +221,13 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
 });
     </script>
 <style>
-    .display{
-        /*display: none;*/
-    }
-
+        .s {
+            display: none;
+        }
     </style>
 </body>
 </html>
+
 
 
 

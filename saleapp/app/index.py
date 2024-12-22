@@ -8,10 +8,10 @@ from sqlalchemy import func
 # import pandas as pd
 from io import BytesIO
 import json
-from app.models import Medicine
+from app.models import Medicine, Precription, MedicineBill
 from sqlalchemy.orm import sessionmaker
 
-
+from datetime import datetime
 @app.route("/", methods=['get', 'post'])
 def index():
     if request.method.__eq__('POST'):
@@ -144,11 +144,10 @@ def taoDon():
         du_doan_benh = request.form.get('duDoanBenh')
 
 
-        print(ho_ten, ngay_kham, trieu_chung)
+
         drug_data = request.form.get('drugCollector')
         ans = json.loads(drug_data)
-        print(ans)
-        print(ans[0]['drugName'])
+        a = MedicineBill(diagnotic=trieu_chung, symptoms=du_doan_benh, examinationDate= datetime.now())
         pass
     return render_template('taoDon.html')
 
