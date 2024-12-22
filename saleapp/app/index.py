@@ -2,11 +2,16 @@ import math
 
 from flask import render_template, request, redirect, jsonify, send_file, g, session
 import dao
-from app import app, login
+from app import app, login, db
 from flask_login import login_user, logout_user
-
-import pandas as pd
+from sqlalchemy import func
+# import pandas as pd
 from io import BytesIO
+import json
+from app.models import Medicine
+from sqlalchemy.orm import sessionmaker
+
+
 @app.route("/", methods=['get', 'post'])
 def index():
     if request.method.__eq__('POST'):
@@ -127,6 +132,51 @@ def export_excel_procee():
     # Gửi file Excel về phía người dùng
     return send_file(output, as_attachment=True, download_name="examination_data.xlsx",
                      mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+
+@app.route("/taoDon", methods=['GET','POST'])
+def taoDon():
+    if request.method.__eq__('POST'):
+
+        ho_ten = request.form.get('name')
+        ngay_kham = request.form.get('ngayKham')
+        trieu_chung = request.form.get('trieuChung')
+        du_doan_benh = request.form.get('duDoanBenh')
+
+
+        print(ho_ten, ngay_kham, trieu_chung)
+        drug_data = request.form.get('drugCollector')
+        ans = json.loads(drug_data)
+        print(ans)
+        print(ans[0]['drugName'])
+        pass
+    return render_template('taoDon.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/api/search-drugs', methods=['GET'])
+def search_drugs():
+    query = request.args.get('q',' ').strip()  # Lấy tham số `q` từ URL
+
+    if not query:
+        return jsonify([])  # Trả về danh sách rỗng nếu không có từ khóa tìm kiếm
+
+    print(query)
+    # results = db.session.query(Medicine.name).filter(Medicine.name.__eq__(query)).limit(4).all()
+    results = db.session.query(Medicine.name).filter(func.lower(Medicine.name).like(f"%{query.lower()}%")).limit(4).all()
+    results_list = [{'name': result[0]} for result in results]
+
+    return jsonify(results_list)
 
 if __name__ == '__main__':
     from app import admin
