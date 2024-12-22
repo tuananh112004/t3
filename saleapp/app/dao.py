@@ -38,7 +38,8 @@ def auth_user(username, password):
 def get_user_by_id(id):
     return Account.query.get(id)
 
-
+def get_patient_name_by_id(id):
+    return db.session.query(Patient).filter(Patient.id==id).first()
 def get_list_patient():
     return Patient.query.all()
 

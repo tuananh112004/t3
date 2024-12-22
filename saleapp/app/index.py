@@ -1,10 +1,12 @@
 import math
-
+from sqlalchemy import text, func
 from flask import render_template, request, redirect, jsonify, send_file, g, session
 from pyexpat.errors import messages
-
+from app.models import Patient, User, TimeFrame, ExaminationList, TimeFrame, ExaminationSchedule, Account,MedicineBill, Medicine
+import json
 import dao
-from app import app, login
+
+from app import app, login,db
 from flask_login import login_user, logout_user
 from datetime import datetime
 import pandas as pd
@@ -159,6 +161,66 @@ def export_excel_procee():
     return send_file(output, as_attachment=True, download_name="examination_data.xlsx",
                      mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
+
+
+@app.route("/taoDon/<patient_id>/<date>", methods=['GET','POST'])
+def taoDon(patient_id,date):
+    name = dao.get_patient_name_by_id(patient_id)
+    print(name)
+    if request.method.__eq__('POST'):
+
+        ho_ten = request.form.get('name')
+
+        trieu_chung = request.form.get('trieuChung')
+        du_doan_benh = request.form.get('duDoanBenh')
+
+
+        drug_data = request.form.get('drugCollector')
+        ans = json.loads(drug_data)
+        a = MedicineBill(diagnotic=trieu_chung, symptoms=du_doan_benh, examinationDate= datetime.now())
+        pass
+    return render_template('taoDon.html',name=name,date=date)
+
+
+
+
+
+
+
+
+@app.route('/api/search-drugs', methods=['GET'])
+def search_drugs():
+    query = request.args.get('q',' ').strip()  # Lấy tham số `q` từ URL
+
+    if not query:
+        return jsonify([])  # Trả về danh sách rỗng nếu không có từ khóa tìm kiếm
+
+    print(query)
+    # results = db.session.query(Medicine.name).filter(Medicine.name.__eq__(query)).limit(4).all()
+    results = db.session.query(Medicine.name).filter(func.lower(Medicine.name).like(f"%{query.lower()}%")).limit(4).all()
+    results_list = [{'name': result[0]} for result in results]
+
+    return jsonify(results_list)
+
+
+@app.route("/listPatient",methods=['GET','POST'])
+def get_list_patient_procees():
+    appointment_date = request.form.get('appointment_date')
+    # appointment_date = datetime.today().strftime('%Y-%m-%d')
+    if(appointment_date):
+        pass
+    else:
+        appointment_date = '2024-12-12'
+    date_obj = datetime.strptime(appointment_date, '%Y-%m-%d')
+    formatted_date = date_obj.strftime('%d-%m-%Y')
+    if request.method.__eq__('POST'):
+
+
+        record = dao.get_list_patient2(appointment_date)
+        print(record)
+        return render_template('patientList.html', records = record,date=formatted_date)
+
+    return render_template('patientList.html',date=formatted_date)
 if __name__ == '__main__':
     from app import admin
     app.run(debug=True)
