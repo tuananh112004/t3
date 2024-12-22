@@ -155,6 +155,9 @@ class MedicineBill(db.Model):
     patient_id = Column(Integer, ForeignKey(Patient.id), nullable=False)
     bill_id = Column(Integer, ForeignKey(Bill.id), nullable=False)
 
+    # precriptions = relationship('MedicineBill', backref='precription', lazy=True)
+    precriptions = relationship('Precription', backref='medicine', lazy=True)
+
 class MedicineUnit(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     unit = Column(String(50))
@@ -169,7 +172,7 @@ class Medicine(db.Model):
     price = Column(Float, default=0)
     amount = Column(Integer, default=0)
     unit_id = Column(Integer, ForeignKey(MedicineUnit.id), nullable=False)
-
+    precriptions = relationship('Precription', backref='medicine2', lazy=True)
     def __str__(self):
         return self.name
 class Precription(db.Model):

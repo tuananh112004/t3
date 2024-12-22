@@ -11,10 +11,10 @@
         <div class="row">
             <div class="col-md-4">
                 {% if records %}
-                <input type="date" name="appointment_date" value="{{ records[0]['examination_date']}}"
-                       class="form-control date_pick" id = "date_pick"required>
+                    <input type="date" name="appointment_date" value="{{ records[0]['examination_date']}}"
+                           class="form-control date_pick" id = "date_pick"required>
                 {%else%}
-                <input type="date" name="appointment_date" class="form-control date_pick" required>
+                    <input type="date" name="appointment_date" class="form-control date_pick" required>
                 {%endif%}
             </div>
             <div class="col-md-4">
@@ -24,29 +24,39 @@
     </form>
 
     {% if records %}
-    <h3 class="text-center">Danh Sách Khám Bệnh vào ngày: {{ records[0]['examination_date']}}</h3>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên Bệnh Nhân</th>
-            <th>Ngày Khám</th>
-            <th>Giờ khám</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for record in records %}
-        <tr>
-            <td>{{ record.patient_id }}</td>
-            <td>{{ record.patient_name }}</td>
-            <td>{{ record.examination_date }}</td>
-            <td>{{ record.time }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <h3 class="text-center">Danh Sách Khám Bệnh vào ngày: {{ records[0]['examination_date']}}</h3>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Bệnh Nhân</th>
+                <th>Giới tính</th>
+                <th>Ngày Khám</th>
+                <th>Giờ khám</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for record in records %}
+            <tr id = "{{ record[0] }}" >
+                <td>{{ record[0] }}</td>
+                <td>{{ record[1] }}</td>
+                <td>{{ record[2] }}</td>
+                {%if record[3]%}
+                    <td>{{ record[3].strftime('%Y-%m-%d') }}</td>
+                {%else%}
+                    <td>No information</td>
+                {%endif%}
+    <!--            deleteCart({{ record.patient_id  }})-->
+                <td>
+                <button class="btn btn-danger"  onclick="deletePatient({{ record[0] }})">&times;</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% else %}
-    <p class="text-center text-muted">Không có phiếu khám bệnh nào vào ngày này.</p>
+        <p class="text-center text-muted">Không có phiếu khám bệnh nào vào ngày này.</p>
     {% endif %}
 
 
@@ -75,8 +85,8 @@
                                required="">
                     </div>
                     <div class="col-md-4 form-group mt-3 mt-md-0">
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"
-                               required="">
+                       <input type="date" name="birth" class="form-control datepicker" id="birth"
+                               placeholder="Birth" required="">
                     </div>
                     <div class="col-md-4 form-group mt-3 mt-md-0">
                         <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone"
@@ -121,6 +131,19 @@
 
 
     <script>
+
+        function deletePatient(patientId) {
+            if (confirm("Ban chac chan xoa khong?") === true) {
+                console.log("OK")
+                fetch(`/api/patient/${patientId}`, {
+                    method: 'delete'
+                }).then(res => res.json()).then(data => {
+                    console.log(data)
+                    document.getElementById(`${patientId}`).style.display = "none";
+                    // updateUI(data);
+                });
+            }
+        }
         // Lấy phần tử modal và các phần tử liên quan
         var modal = document.getElementById("myModal");
         var openModalBtn = document.getElementById("openModalBtn");

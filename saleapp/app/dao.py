@@ -1,4 +1,4 @@
-from sqlalchemy import text
+from sqlalchemy import text, func
 from app.models import Patient, User, TimeFrame, ExaminationList, TimeFrame, ExaminationSchedule, Account, Nurse
 import hashlib
 from flask import Flask, g, render_template, session
@@ -45,55 +45,36 @@ def get_list_time_frame():
 
 def get_nurse_by_current_id(id):
     return Nurse.query.filter(Nurse.account_id == id).first()
+
+
+def delete_patient(patient_id):
+    patient = Patient.query.get(patient_id)
+    return db.session.delete(patient)
+
+
 def get_list_patient2(appointment_date):
     # target_date = datetime(2024, 12, 19).date()  # Ngày bạn muốn tìm kiếm
 
     target_date = datetime.strptime(appointment_date, '%Y-%m-%d').date()
-    # nurse_id = get_nurse_by_current_id(current_user.id)
-    # e = ExaminationList(examinationDate = target_date,nurse_id = nurse_id.id)
-
-
-
+    # return db.session.query(Product.id, Product.name, func.sum(ReceiptDetails.quantity * ReceiptDetails.unit_price)) \
+    #     .join(ReceiptDetails, ReceiptDetails.product_id.__eq__(Product.id)).group_by(Product.id).all()
     print(target_date)
-    # Truy vấn dữ liệu từ các bảng ExaminationSchedule, Patient, TimeFrame và ExaminationList
-    examination_schedules = db.session.query(ExaminationSchedule, Patient, TimeFrame). \
-        join(Patient, Patient.id == ExaminationSchedule.patient_id). \
-        join(TimeFrame, TimeFrame.id == ExaminationSchedule.time_frame_id). \
-        filter(db.func.date(ExaminationSchedule.date_examination) == target_date).all()
-
-    result_data = []
-    print(examination_schedules)
-    # Kiểm tra kết quả trả về
-    if not examination_schedules:
-        print("Không có dữ liệu cho ngày này")
+    dataTest = db.session.query(Patient.id,Patient.name, Patient.sex, Patient.birthday, Patient.address)\
+                .join(ExaminationSchedule, ExaminationSchedule.patient_id==User.id) \
+                .group_by(Patient.id) \
+                .filter(func.date(ExaminationSchedule.date_examination).__eq__(appointment_date)).all()
 
 
 
-    for schedule, patient, time_frame in examination_schedules:
-        result_data.append({
-            'examination_id': schedule.id,
-            'patient_name': patient.name,  # Lấy tên bệnh nhân
-            'patient_id': patient.id,
-            'time': time_frame.time,  # Lấy khung giờ khám
-            'examination_date': schedule.date_examination.strftime('%Y-%m-%d'),  # Ngày khám
+    print(dataTest)
+    return dataTest
 
-        })
-    print(result_data)
-    g.result_data = []
-    g.result_data = result_data
-    print(g.result_data)
-    # if hasattr(g, 'result_data'):
-    #     return f"Result: {g.result_data}"
-    # else:
-    #     return "No result data found!"
-    session['result_data'] = result_data
-    return result_data
 
-def create_appointment(date_examination, note, name, email, phone, time,address):
+def create_appointment(date_examination, note, name, birth, phone, time,address):
     time_frame = TimeFrame.query.filter(TimeFrame.time == time).first()
     print(time_frame)
     time_frame_id = time_frame.id
-    patient = Patient(name,phone,birthday=None, address=address, avatar=None)
+    patient = Patient(name,phone,birthday=birth, address=address, avatar=None)
     db.session.add(patient)
     db.session.commit()
 
@@ -102,4 +83,8 @@ def create_appointment(date_examination, note, name, email, phone, time,address)
     db.session.add(u)
     db.session.commit()
     return True
+
+if __name__ == '__main__':
+    with app.app_context():
+        print(get_list_patient2('2024-12-12'))
 

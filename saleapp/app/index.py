@@ -12,12 +12,12 @@ def index():
     if request.method.__eq__('POST'):
         name = request.form.get('name')
         phone = request.form.get('phone')
-        email = request.form.get('email')
+        birth = request.form.get('birth')
         address = request.form.get('address')
         time = request.form.get('time')
         note = request.form.get('note')
         date = request.form.get('date')
-        a = dao.create_appointment(name = name, phone=phone, email=email, address=address, time = time, note = note,date_examination=date)
+        a = dao.create_appointment(name = name, phone=phone, birth=birth, address=address, time = time, note = note,date_examination=date)
         return redirect(request.referrer or '/')
     else:
         time_frames = dao.get_list_time_frame()
@@ -72,6 +72,16 @@ def medi():
         return render_template('medicineb.html')
     return render_template('medicineb.html')
 
+
+
+@app.route('/api/patient/<patient_id>', methods=['DELETE'])
+def delete_patient(patient_id):
+    if patient_id:
+        print(patient_id)
+        dao.delete_patient(patient_id)
+        return jsonify({"status": 200})
+    print("Loi xoa")
+    return jsonify({"statussss": 404})
 
 
 @app.route("/login-admin",methods=['post'])
