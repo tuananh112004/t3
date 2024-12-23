@@ -1,7 +1,8 @@
 from itertools import count
 
 from sqlalchemy import text, func
-from app.models import Patient, User, TimeFrame, ExaminationList, TimeFrame, ExaminationSchedule, Account, Nurse
+from app.models import Patient, User, TimeFrame, ExaminationList, TimeFrame, ExaminationSchedule, Account, Nurse, \
+    MedicineUnit, Medicine, Precription, MedicineBill, Doctor
 import hashlib
 from flask import Flask, g, render_template, session
 from app import app,db
@@ -37,7 +38,8 @@ def auth_user(username, password):
                              Account.password.__eq__(password)).first()
 def get_user_by_id(id):
     return Account.query.get(id)
-
+def get_info_user_by_account_id(id):
+    return db.session.query(User).filter(User.account_id==id).first()
 def get_patient_name_by_id(id):
     return db.session.query(Patient).filter(Patient.id==id).first()
 def get_list_patient():
@@ -108,6 +110,43 @@ def create_appointment(date_examination, note, name, birth, sex, time,address):
     db.session.add(u)
     db.session.commit()
     return True
+
+
+#   amount = Column(Integer, default=0)
+#     note = Column(String(50))
+#     medicine_id = Column(Integer, ForeignKey(Medicine.id), nullable=False)
+#     medicineBill_id = Column(Integer, ForeignKey(MedicineBill.id), nullable=False)
+
+def get_unit_medicine():
+    return db.session.query(MedicineUnit).all()
+def get_medicine_by_name(name):
+    return db.session.query(Medicine).filter(Medicine.name==name).first()
+
+def get_medicine():
+    return db.session.query(Medicine).all()
+
+#
+# diagnotic = Column(String(50))
+#     symptoms = Column(String(50))
+#     examinationDate = Column(DATETIME)
+#     doctor_id = Column(Integer, ForeignKey(Doctor.id), nullable=False)
+#     patient_id = Column(Integer, ForeignKey(Patient.id), nullable=False)
+#     bill_id = Column(Integer, ForeignKey(Bill.id), nullable=True)
+def create_medicine_bill(diagnotic, symptoms,examinationDate,doctor_id,patient_id):
+    medicineBill = MedicineBill(diagnotic=diagnotic, symptoms=symptoms, examinationDate = examinationDate, doctor_id=doctor_id, patient_id=patient_id)
+    print("create_medicine_bill",diagnotic, symptoms,examinationDate,doctor_id,patient_id)
+    db.session.add(medicineBill)
+    db.session.commit()
+    return medicineBill.id
+
+def create_precription(amount,note, medicine_id,medicineBill_id, unit_id):
+    print("create_precription",amount,note, medicine_id,medicineBill_id, unit_id)
+    precription = Precription(amount = amount, note = note, medicine_id = medicine_id, medicineBill_id = medicineBill_id, unit_id = unit_id)
+    db.session.add(precription)
+    db.session.commit()
+
+def get_doctor_id_by_account_id(account_id):
+    return db.session.query(Doctor).filter(Doctor.account_id==account_id).first()
 
 if __name__ == '__main__':
     with app.app_context():

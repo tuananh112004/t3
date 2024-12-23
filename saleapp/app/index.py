@@ -7,7 +7,7 @@ import json
 import dao
 
 from app import app, login,db
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from datetime import datetime
 import pandas as pd
 from io import BytesIO
@@ -53,7 +53,9 @@ def login_procee():
         password = request.form.get('password')
         u = dao.auth_user(username, password)
         if u:
-            print(u)
+            # user = dao.get_info_user_by_account_id(u.id)
+            # print("Doctor",user)
+            # session['user'] = user.id
             login_user(u)
             return redirect('/')
 
@@ -166,20 +168,33 @@ def export_excel_procee():
 @app.route("/taoDon/<patient_id>/<date>", methods=['GET','POST'])
 def taoDon(patient_id,date):
     name = dao.get_patient_name_by_id(patient_id)
-    print(name)
+    # formatted_date = datetime.strptime(date, '%Y-%m-%d')
     if request.method.__eq__('POST'):
-
-        ho_ten = request.form.get('name')
-
         trieu_chung = request.form.get('trieuChung')
         du_doan_benh = request.form.get('duDoanBenh')
-
-
         drug_data = request.form.get('drugCollector')
+        doctor_id = session['user']
+
+        print(doctor_id)
+        print(du_doan_benh)
+        print(drug_data)
+        medicine_bill_id = dao.create_medicine_bill(diagnotic=du_doan_benh, symptoms=trieu_chung, examinationDate=datetime.now(), doctor_id=doctor_id, patient_id=patient_id)
         ans = json.loads(drug_data)
-        a = MedicineBill(diagnotic=trieu_chung, symptoms=du_doan_benh, examinationDate= datetime.now())
+        print(ans)
+        for medicine in ans:
+            amount = medicine['drugQuantity']
+            note = medicine['drugUsage']
+            medicine_id = dao.get_medicine_by_name(medicine['drugName']).id
+            unit_id = medicine['drugUnit']
+            newprecription =  dao.create_precription(amount, note, medicine_id, medicineBill_id = medicine_bill_id, unit_id = unit_id)
+
+        return redirect("/")
         pass
-    return render_template('taoDon.html',name=name,date=date)
+    else:
+        unit_medicine = dao.get_unit_medicine()
+        print(unit_medicine)
+        # medicines = dao.get_medicines()
+        return render_template('taoDon.html',patient_id = patient_id,name=name,date=date,unit_medicine=unit_medicine)
 
 
 

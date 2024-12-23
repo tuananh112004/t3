@@ -153,7 +153,7 @@ class MedicineBill(db.Model):
     examinationDate = Column(DATETIME)
     doctor_id = Column(Integer, ForeignKey(Doctor.id), nullable=False)
     patient_id = Column(Integer, ForeignKey(Patient.id), nullable=False)
-    bill_id = Column(Integer, ForeignKey(Bill.id), nullable=False)
+    bill_id = Column(Integer, ForeignKey(Bill.id), nullable=True)
 
     # precriptions = relationship('MedicineBill', backref='precription', lazy=True)
     precriptions = relationship('Precription', backref='medicine', lazy=True)
@@ -171,16 +171,19 @@ class Medicine(db.Model):
     description = Column(String(50))
     price = Column(Float, default=0)
     amount = Column(Integer, default=0)
+
     unit_id = Column(Integer, ForeignKey(MedicineUnit.id), nullable=False)
-    precriptions = relationship('Precription', backref='medicine2', lazy=True)
+    # precriptions = relationship('Precription', backref='medicine2', lazy=True)
     def __str__(self):
         return self.name
 class Precription(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     amount = Column(Integer, default=0)
     note = Column(String(50))
+    # drugUsage = Column(String(50))
     medicine_id = Column(Integer, ForeignKey(Medicine.id), nullable=False)
     medicineBill_id = Column(Integer, ForeignKey(MedicineBill.id), nullable=False)
+    unit_id = Column(Integer, ForeignKey(MedicineUnit.id), nullable=False)
 
 class ExaminationList(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -216,17 +219,21 @@ if __name__ == '__main__':
         #
         # u = Patient(name='A',sex="female",birthday="2000-01-02",address="ABC",avatar="123",insuranced="123")
         # db.session.add(u)
-        # a = Administrator(name='A', sex="female", birthday="2000-01-02", address="ABC", account_id= 1,
+        # a = Administrator(name='A', sex="female", birthday="2000-01-02", address="ABC", account_id= 3,
         #              avatar="123", inauguration="2000-01-01",salary='Aks')
         # db.session.add(a)
-        # d = Nurse(name='Doc', sex="female", birthday="2000-01-02", address="ABC", avatar="123",degree="CNTT" , salary='aksj')
+        # d = Nurse(name='Doc', sex="female", birthday="2000-01-02", address="ABC", avatar="123",degree="CNTT" , salary='aksj',account_id=4)
         # db.session.add(d)
-        # e = ExaminationList(examinationDate = '2024-12-19',nurse_id = 4)
+        # e = ExaminationList(examinationDate = '2024-12-19',nurse_id = 3)
         # db.session.add(e)
-        # k = ExaminationSchedule(date_examination='2024-12-19',patient_id = 2, examination_list_id = 1, time_frame_id = 1)
-        # db.session.add(k)
-        aa = Account(username="admin", password="123",account_role=UserRole.Admin)
-        db.session.add(aa)
+        k = ExaminationSchedule(date_examination='2024-12-19',patient_id = 4, examination_list_id = 1, time_frame_id = 1,note="aaa")
+        db.session.add(k)
+        # aa = Account(username="admin", password="123",account_role=UserRole.Admin)
+        # db.session.add(aa)
+        # aa = Account(username="patient1", password="123", account_role=UserRole.Nurse)
+        # db.session.add(aa)
+        # d = Doctor(name='Doc',sex="female",birthday="2000-01-02",address="ABC",avatar="123",specialist = 'ABC',yearOfExperience = 3,salary='1',account_id = aa.id)
+        # db.session.add(d)
         # donViA = MedicineUnit('vien')
         # thuocA = Medicine('thuoc','abc',12,22,)
 
