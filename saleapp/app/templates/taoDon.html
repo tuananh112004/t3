@@ -9,12 +9,16 @@
 
 
 <body>
+
     <div class="container mt-5">
         <div class="card">
             <div class="card-header text-center bg-primary text-white">
                 <h4>Phiếu Khám Bệnh</h4>
             </div>
             <div class="card-body">
+                <div>
+                    <a href="/history/{{patient_id}}">Lịch sử bệnh nhân</a>
+                </div>
                 <form method="POST" action="/taoDon/{{patient_id}}/{{date}}"  >
                     <div class="mb-3">
                         <label  class="form-label">Họ và tên</label>
@@ -32,6 +36,7 @@
 <!--                        <input type="date" class="form-control" name ="ngayKham" id="ngayKham">-->
                         <div>{{date}}</div>
                     </div>
+
                     <div class="mb-3">
                         <label for="trieuChung" class="form-label">Triệu chứng</label>
                         <textarea class="form-control" id="trieuChung" name ="trieuChung" rows="3" placeholder="Mô tả triệu chứng"></textarea>

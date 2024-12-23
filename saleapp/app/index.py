@@ -53,9 +53,9 @@ def login_procee():
         password = request.form.get('password')
         u = dao.auth_user(username, password)
         if u:
-            # user = dao.get_info_user_by_account_id(u.id)
-            # print("Doctor",user)
-            # session['user'] = user.id
+            user = dao.get_info_user_by_account_id(u.id)
+            print("Doctor",user)
+            session['user'] = user.id
             login_user(u)
             return redirect('/')
 
@@ -63,6 +63,25 @@ def login_procee():
 
     return render_template('login.html')
 
+@app.route("/history/<patient_id>")
+def history_procee(patient_id):
+    record = dao.get_history_patient(patient_id)
+
+    return render_template('patientHistory.html',record=record)
+
+
+@app.route("/register", methods=['get', 'post'])
+def register_procee():
+    if request.method.__eq__('POST'):
+        name = request.form.get('name')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        avatar = request.form.get('avatar')
+        account = dao.create_account(username, password)
+        user = dao.create_patient(name, avatar,account_id=account.id)
+        return redirect('/login')
+    else:
+        return render_template("register.html")
 
 
 @login.user_loader
@@ -95,13 +114,27 @@ def create_list_procee():
 
     return render_template('list.html',date=formatted_date)
 
-@app.route("/abc", methods=['get', 'post'])
-def medi():
+@app.route("/info/<user_id>", methods=['get', 'post'])
+def info_process(user_id):
     if request.method.__eq__('POST'):
-        a = request.form.get('ids')
-        print(a)
-        return render_template('medicineb.html')
-    return render_template('medicineb.html')
+        name = request.form.get('name')
+        address = request.form.get('address')
+        sex = request.form.get('gender')
+        birth = request.form.get('birth')
+        avatar = request.form.get('avatar')
+        print(name)
+        print(address)
+        print(sex)
+        print(birth)
+        print(avatar)
+        dao.change_info_user(name=name, address=address, sex=sex, birth=birth, avatar=avatar, user_id=user_id)
+        return redirect('/info/'+user_id)
+
+    else:
+        user = dao.get_info_user2(user_id)
+        if(user.birthday):
+            formatted_date = user.birthday.strftime('%Y-%m-%d')
+        return render_template('infoUser.html',user=user,date=formatted_date)
 
 
 
@@ -114,6 +147,9 @@ def delete_patient(patient_id):
     print("Loi xoa")
     return jsonify({"statussss": 404})
 
+@app.route('/bacSi', methods=['get'])
+def bac():
+    return render_template("QL.html")
 
 @app.route("/login-admin",methods=['post'])
 def login_admin_procees():
@@ -188,7 +224,7 @@ def taoDon(patient_id,date):
             unit_id = medicine['drugUnit']
             newprecription =  dao.create_precription(amount, note, medicine_id, medicineBill_id = medicine_bill_id, unit_id = unit_id)
 
-        return redirect("/")
+        return redirect(request.referrer or '/')
         pass
     else:
         unit_medicine = dao.get_unit_medicine()

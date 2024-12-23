@@ -36,15 +36,41 @@ def auth_user(username, password):
     # password2 =  str(hashlib.md5('123'.encode('utf-8')).hexdigest())
     return Account.query.filter(Account.username.__eq__(username),
                              Account.password.__eq__(password)).first()
+
 def get_user_by_id(id):
     return Account.query.get(id)
+
 def get_info_user_by_account_id(id):
     return db.session.query(User).filter(User.account_id==id).first()
+
 def get_patient_name_by_id(id):
     return db.session.query(Patient).filter(Patient.id==id).first()
+
 def get_list_patient():
     return Patient.query.all()
 
+def get_info_user2(id):
+    return db.session.query(Patient).join(User, User.id==Patient.id).filter(Patient.id==id).first()
+
+def get_info_user3(id):
+    return db.session.query(User).filter(User.id==id).first()
+#
+# name = request.form.get('name')
+#         address = request.form.get('address')
+#         sex = request.form.get('gender')
+#         birth = request.form.get('birth')
+#         avatar = request.form.get('avatar')
+
+def change_info_user(name,address,sex, birth, avatar, user_id):
+    user = db.session.query(User).filter(User.id==user_id).first()
+    print(user)
+    user.name = name
+    user.address = address
+    user.birthday = birth
+    user.avatar = avatar
+    user.sex = sex
+    db.session.commit()
+    return user
 def get_list_time_frame():
     return TimeFrame.query.all()
 
@@ -148,7 +174,23 @@ def create_precription(amount,note, medicine_id,medicineBill_id, unit_id):
 def get_doctor_id_by_account_id(account_id):
     return db.session.query(Doctor).filter(Doctor.account_id==account_id).first()
 
+
+
+def get_history_patient(id):
+    return db.session.query(MedicineBill).filter(MedicineBill.patient_id==id).all()
+
+
+def create_account(username,password):
+    account = Account(username=username, password=password)
+    db.session.add(account)
+    db.session.commit()
+    return account
+def create_patient(name,avatar,account_id):
+    patient = User(name=name,avatar=avatar, account_id=account_id)
+    db.session.add(patient)
+    db.session.commit()
+    return patient
 if __name__ == '__main__':
     with app.app_context():
-        print(get_list_patient2('2024-12-12'))
+        print(get_history_patient(5))
 
