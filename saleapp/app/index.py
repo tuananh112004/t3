@@ -7,7 +7,7 @@ import json
 import dao
 
 from app import app, login,db
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
 import pandas as pd
 from io import BytesIO
@@ -42,7 +42,13 @@ def index():
         return redirect(request.referrer or '/')
     else:
         time_frames = dao.get_list_time_frame()
-        return render_template('index.html',time_frames=time_frames)
+        comments =  dao.load_comments()
+        for comment in comments:
+            user_info = dao.get_info_user3(comment.user_id)
+            comment.avatar = user_info.avatar
+        return render_template('index.html',time_frames=time_frames,
+                               comments = comments)
+
 
    # return render_template('index.html', categories = cates, products = prods, page = math.ceil(total/page_size))
 
@@ -272,6 +278,24 @@ def get_list_patient_procees():
         return render_template('patientList.html', records = record,date=formatted_date)
 
     return render_template('patientList.html',date=formatted_date)
+
+
+
+@app.route('/comments', methods=['post'])
+@login_required
+def addcomment():
+
+    content = request.json.get('content')
+    c = dao.add_comment(content=content)
+    return jsonify({
+        "content": c.content,
+        "created_date": c.created_date,
+        "user": {
+            "avatar": c.avatar
+        }
+    })
+
+
 if __name__ == '__main__':
     from app import admin
     app.run(debug=True)

@@ -43,7 +43,7 @@
                     <select name="time" id="time" class="form-select" required="">
                         <option value="">Time</option>
                         {% for t in time_frames%}
-                            <option value="{{t.time}}">{{t.time}}</option>
+                        <option value="{{t.time}}">{{t.time}}</option>
                         {%endfor%}
                     </select>
                 </div>
@@ -64,7 +64,54 @@
 
     </div>
 
+
 </section><!-- /Appointment Section -->
+{% if current_user.is_authenticated %}
+<div class="mt-2">
+    <textarea class="form-control" rows="5" id="comment" placeholder="Noi dung binh luan..."></textarea>
+ <button class="btn btn-success mt-1" onclick="addComment()">Binh luan</button>-->
+</div>
+{% else %}
+<p>Vui long <a href="">dang nhap</a> de binh luan!</p>
+{% endif %}
 
 
+<ul class="list-group mt-2" id="comments">
+   {% for c in comments %}
+    <li class="list-group-item">
+
+        <div class="row">
+            <div class="col-md-1 col-4">
+                <img src="{{ c.avatar }}" class="img-fluid rounded-circle" />
+            </div>
+            <div class="col-md-11 col-8">
+                <p>{{ c.content }}</p>
+                <p class="date">{{ c.created_date }}</p>
+            </div>
+        </div>
+
+    </li>
+    {% endfor %}
+
+</ul>
+<script>
+    function addComment() {
+    fetch(`/comments`, {
+        method: "post",
+        body: JSON.stringify({
+            "content": document.getElementById("comment").value
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => res.json()).then(c => {
+        let html = `
+
+        `;
+
+        let comments = document.getElementById("comments");
+        comments.innerHTML = html + comments.innerHTML;
+    })
+}
+</script>
 {%endblock%}

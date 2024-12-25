@@ -2,7 +2,7 @@ from itertools import count
 
 from sqlalchemy import text, func
 from app.models import Patient, User, TimeFrame, ExaminationList, TimeFrame, ExaminationSchedule, Account, Nurse, \
-    MedicineUnit, Medicine, Precription, MedicineBill, Doctor
+    MedicineUnit, Medicine, Precription, MedicineBill, Doctor, Comment
 import hashlib
 from flask import Flask, g, render_template, session
 from app import app,db
@@ -190,6 +190,20 @@ def create_patient(name,avatar,account_id):
     db.session.add(patient)
     db.session.commit()
     return patient
+
+
+def load_comments():
+    return Comment.query.order_by(-Comment.id).all()
+
+
+def add_comment(content):
+    c = Comment(content=content,  user_id=current_user.id)
+    db.session.add(c)
+    db.session.commit()
+
+    return c
+
+
 if __name__ == '__main__':
     with app.app_context():
         print(get_history_patient(5))
