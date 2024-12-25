@@ -5,12 +5,24 @@ from pyexpat.errors import messages
 from app.models import Patient, User, TimeFrame, ExaminationList, TimeFrame, ExaminationSchedule, Account,MedicineBill, Medicine
 import json
 import dao
+<<<<<<< HEAD
 
 from app import app, login,db
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
 import pandas as pd
+=======
+from app import app, login, db
+from flask_login import login_user, logout_user
+from sqlalchemy import func
+# import pandas as pd
+>>>>>>> b910f4c0ad4ba348800b0755ac086a46dc806d01
 from io import BytesIO
+import json
+from app.models import Medicine, Precription, MedicineBill
+from sqlalchemy.orm import sessionmaker
+
+from datetime import datetime
 @app.route("/", methods=['get', 'post'])
 def index():
 
@@ -206,6 +218,7 @@ def export_excel_procee():
                      mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 
+<<<<<<< HEAD
 
 @app.route("/taoDon/<patient_id>/<date>", methods=['GET','POST'])
 def taoDon(patient_id,date):
@@ -237,6 +250,29 @@ def taoDon(patient_id,date):
         print(unit_medicine)
         # medicines = dao.get_medicines()
         return render_template('taoDon.html',patient_id = patient_id,name=name,date=date,unit_medicine=unit_medicine)
+=======
+@app.route("/taoDon", methods=['GET','POST'])
+def taoDon():
+    if request.method.__eq__('POST'):
+
+        ho_ten = request.form.get('name')
+        ngay_kham = request.form.get('ngayKham')
+        trieu_chung = request.form.get('trieuChung')
+        du_doan_benh = request.form.get('duDoanBenh')
+
+
+
+        drug_data = request.form.get('drugCollector')
+        ans = json.loads(drug_data)
+        a = MedicineBill(diagnotic=trieu_chung, symptoms=du_doan_benh, examinationDate= datetime.now())
+        pass
+    return render_template('taoDon.html')
+
+
+
+
+
+>>>>>>> b910f4c0ad4ba348800b0755ac086a46dc806d01
 
 
 
@@ -259,6 +295,7 @@ def search_drugs():
 
     return jsonify(results_list)
 
+<<<<<<< HEAD
 
 @app.route("/listPatient",methods=['GET','POST'])
 def get_list_patient_procees():
@@ -296,6 +333,8 @@ def addcomment():
     })
 
 
+=======
+>>>>>>> b910f4c0ad4ba348800b0755ac086a46dc806d01
 if __name__ == '__main__':
     from app import admin
     app.run(debug=True)

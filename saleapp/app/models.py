@@ -236,14 +236,17 @@ if __name__ == '__main__':
         # db.session.add(k)
         # aa = Account(username="admin", password="123",account_role=UserRole.Admin)
         # db.session.add(aa)
+<<<<<<< HEAD
         # aa = Account(username="patient1", password="123", account_role=UserRole.Nurse)
         # db.session.add(aa)
         # d = Doctor(name='Doc',sex="female",birthday="2000-01-02",address="ABC",avatar="123",specialist = 'ABC',yearOfExperience = 3,salary='1',account_id = aa.id)
         # db.session.add(d)
+=======
+>>>>>>> b910f4c0ad4ba348800b0755ac086a46dc806d01
         # donViA = MedicineUnit('vien')
         # thuocA = Medicine('thuoc','abc',12,22,)
 
-        db.session.commit()
+        # db.session.commit()
 
         # c1 = Category(name='Mobile')
         # c2 = Category(name='Tablet')

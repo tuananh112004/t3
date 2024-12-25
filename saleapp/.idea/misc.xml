@@ -3,7 +3,11 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.13 (saleapp) (2)" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13 (saleapp) (6)" project-jdk-type="Python SDK" />
+=======
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13 (saleapp) (5)" project-jdk-type="Python SDK" />
+>>>>>>> b910f4c0ad4ba348800b0755ac086a46dc806d01
   <component name="PyCharmProfessionalAdvertiser">
     <option name="shown" value="true" />
   </component>
